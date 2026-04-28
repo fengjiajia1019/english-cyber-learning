@@ -1,13 +1,18 @@
 import { useState } from 'react'
+import type { PageType } from '../App'
 
-const Sidebar = () => {
-  const [activeTab, setActiveTab] = useState('learn')
+interface SidebarProps {
+  onPageChange: (page: PageType) => void
+}
+
+const Sidebar = ({ onPageChange }: SidebarProps) => {
+  const [activeTab, setActiveTab] = useState('keyboard')
 
   const menuItems = [
-    { id: 'learn', icon: '⌨️', label: 'KEYBOARD' },
+    { id: 'keyboard' as PageType, icon: '⌨️', label: 'KEYBOARD' },
+    { id: 'dictation' as PageType, icon: '✍️', label: 'DICTATION' },
     { id: 'words', icon: '📚', label: 'WORDS' },
     { id: 'stats', icon: '📊', label: 'STATS' },
-    { id: 'settings', icon: '⚙️', label: 'CONFIG' },
   ]
 
   return (
@@ -25,7 +30,12 @@ const Sidebar = () => {
         {menuItems.map(item => (
           <button
             key={item.id}
-            onClick={() => setActiveTab(item.id)}
+            onClick={() => {
+              setActiveTab(item.id)
+              if (item.id === 'keyboard' || item.id === 'dictation') {
+                onPageChange(item.id)
+              }
+            }}
             className={`
               w-full flex items-center gap-3 px-4 py-3 rounded-lg
               transition-all duration-200

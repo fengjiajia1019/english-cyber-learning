@@ -5,6 +5,9 @@ import TypingArea from './components/TypingArea'
 import Stats from './components/Stats'
 import Sidebar from './components/Sidebar'
 import LessonSelect from './components/LessonSelect'
+import Dictation from './pages/Dictation'
+
+export type PageType = 'keyboard' | 'dictation'
 
 export interface Word {
   english: string
@@ -85,6 +88,8 @@ const lessons: Lesson[] = [
 ]
 
 function App() {
+  const [currentPage, setCurrentPage] = useState<PageType>('keyboard')
+  
   const [gameState, setGameState] = useState<GameState>({
     learnedIndices: [],
     currentWordIndex: 0,
@@ -207,13 +212,18 @@ function App() {
     ? Math.round((gameState.correctCount / (gameState.correctCount + gameState.wrongCount)) * 100)
     : 100
 
+  // Render dictation page in fullscreen mode
+  if (currentPage === 'dictation') {
+    return <Dictation onBack={() => setCurrentPage('keyboard')} />
+  }
+
   return (
     <div className="min-h-screen bg-cyber-black grid-bg relative">
       <MatrixRain />
       <div className="scanlines" />
       
       <div className="relative z-10 flex">
-        <Sidebar />
+        <Sidebar onPageChange={setCurrentPage} />
         
         <main className="flex-1 p-8 ml-64">
           {/* Header */}
