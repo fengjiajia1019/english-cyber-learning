@@ -3,10 +3,11 @@ import type { Lesson } from '../App'
 interface LessonSelectProps {
   lessons: Lesson[]
   currentLesson: Lesson
+  learnedCount: number
   onSelect: (lesson: Lesson) => void
 }
 
-const LessonSelect = ({ lessons, currentLesson, onSelect }: LessonSelectProps) => {
+const LessonSelect = ({ lessons, currentLesson, learnedCount, onSelect }: LessonSelectProps) => {
   const difficultyColors = {
     beginner: 'text-cyber-green border-cyber-green bg-cyber-green/10',
     intermediate: 'text-cyber-yellow border-cyber-yellow bg-cyber-yellow/10',
@@ -54,26 +55,31 @@ const LessonSelect = ({ lessons, currentLesson, onSelect }: LessonSelectProps) =
                 </span>
               </div>
 
-              {/* Progress bar preview */}
-              {!isActive && (
-                <div className="cyber-progress mt-3 h-1">
-                  <div className="cyber-progress-bar" style={{ width: '0%' }} />
+              {/* Progress bar */}
+              <div className="mt-3">
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-gray-500">
+                    {isActive ? 'LEARNED' : 'NOT STARTED'}
+                  </span>
+                  <span className={isActive ? 'text-cyber-green' : 'text-gray-500'}>
+                    {isActive ? `${learnedCount}/${lesson.words.length}` : '0/' + lesson.words.length}
+                  </span>
                 </div>
-              )}
-              
-              {isActive && (
-                <div className="cyber-progress mt-3 h-1">
-                  <div className="cyber-progress-bar bg-cyber-green" style={{ width: '100%' }} />
+                <div className="cyber-progress h-2">
+                  <div 
+                    className={`cyber-progress-bar ${isActive ? 'bg-cyber-green' : ''}`} 
+                    style={{ width: isActive ? `${(learnedCount / lesson.words.length) * 100}%` : '0%' }} 
+                  />
                 </div>
-              )}
+              </div>
             </button>
           )
         })}
       </div>
 
-      {/* Quick Stats */}
+      {/* Total Progress */}
       <div className="mt-6 p-4 bg-cyber-black/50 rounded-lg border border-cyber-green/20">
-        <p className="text-xs text-gray-500 mb-2">TOTAL PROGRESS</p>
+        <p className="text-xs text-gray-500 mb-2">TOTAL MASTERY</p>
         <div className="flex items-center gap-4">
           <div className="flex-1">
             <div className="cyber-progress h-2">
